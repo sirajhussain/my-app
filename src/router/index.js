@@ -2,6 +2,7 @@ import Vue from "vue";
 import Router from "vue-router";
 
 import NotFound from "../views/NotFound.vue";
+import MovieDetails from "../components/MovieDetails.vue";
 
 Vue.use(Router);
 const routes = [
@@ -12,6 +13,11 @@ const routes = [
   {
     path: "/moviesList", // The URL path that corresponds to this route
     component: () => import("@/views/MoviesList.vue"),
+  },
+  {
+    path: "/movie/:id", // Route with a dynamic segment for movie ID
+    name: "MovieDetails",
+    component: MovieDetails,
   },
   {
     path: "/addMovie", // Another URL path for a different route

@@ -1,7 +1,6 @@
 <template>
     <div>
-
-        <el-form :model="movieData" ref="ruleForm" label-width="120px">
+        <el-form :model="movieData" :rules="rules" ref="movieForm" label-width="130px">
             <el-form-item label="Title">
                 <el-input v-model="movieData.Title"></el-input>
             </el-form-item>
@@ -18,10 +17,10 @@
                 <el-input v-model="movieData['Production Budget']"></el-input>
             </el-form-item>
             <el-form-item label="Release Date">
-                <el-input v-model="movieData['Release Date']"></el-input>
+                <el-date-picker v-model="movieData['Release Date']" type="date" placeholder="Select date"></el-date-picker>
             </el-form-item>
             <el-form-item label="MPAA Rating">
-                <el-input v-model="movieData['MPAA Rating']"></el-input>
+                <el-input-number v-model="movieData['MPAA Rating']" :min="1" :max="10"></el-input-number>
             </el-form-item>
             <el-form-item label="Running Time min">
                 <el-input v-model="movieData['Running Time min']"></el-input>
@@ -35,7 +34,13 @@
                 <el-input v-model="movieData.Source"></el-input>
             </el-form-item>
             <el-form-item label="Major Genre">
-                <el-input v-model="movieData['Major Genre']"></el-input>
+                <el-radio-group v-model="movieData['Major Genre']">
+                    <el-radio label="Drama">Drama</el-radio>
+                    <el-radio label="Comedy">Comedy</el-radio>
+                    <el-radio label="Musical">Musical</el-radio>
+                    <el-radio label="Adventure">Adventure</el-radio>
+                    <el-radio label="Action">Action</el-radio>
+                </el-radio-group>
             </el-form-item>
             <el-form-item label="Creative Type">
                 <el-input v-model="movieData['Creative Type']"></el-input>
@@ -52,61 +57,16 @@
             <el-form-item label="IMDB Votes">
                 <el-input v-model="movieData['IMDB Votes']"></el-input>
             </el-form-item>
+            <el-form-item label="In Stock">
+                <el-switch v-model="movieData['Available']" active-color="#13ce66" inactive-color="#ff4949">
+                </el-switch>
+            </el-form-item>
             <!-- You can add more form items for each property in the movieData object -->
+            <el-form-item>
+                <el-button type="primary" @click="submitForm('movieForm')">Create</el-button>
+                <el-button @click="resetForm('movieForm')">Reset</el-button>
+            </el-form-item>
         </el-form>
-        <div style="display:none">
-            <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="120px" class="demo-ruleForm">
-                <el-form-item label="Activity name" prop="name">
-                    <el-input v-model="ruleForm.name"></el-input>
-                </el-form-item>
-                <el-form-item label="Activity zone" prop="region">
-                    <el-select v-model="ruleForm.region" placeholder="Activity zone">
-                        <el-option label="Zone one" value="shanghai"></el-option>
-                        <el-option label="Zone two" value="beijing"></el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="Activity time" required>
-                    <el-col :span="11">
-                        <el-form-item prop="date1">
-                            <el-date-picker type="date" placeholder="Pick a date" v-model="ruleForm.date1"
-                                style="width: 100%;"></el-date-picker>
-                        </el-form-item>
-                    </el-col>
-                    <el-col class="line" :span="2">-</el-col>
-                    <el-col :span="11">
-                        <el-form-item prop="date2">
-                            <el-time-picker type="fixed-time" placeholder="Pick a time" v-model="ruleForm.date2"
-                                style="width: 100%;"></el-time-picker>
-                        </el-form-item>
-                    </el-col>
-                </el-form-item>
-                <el-form-item label="Instant delivery" prop="delivery">
-                    <el-switch v-model="ruleForm.delivery"></el-switch>
-                </el-form-item>
-                <el-form-item label="Activity type" prop="type">
-                    <el-checkbox-group v-model="ruleForm.type">
-                        <el-checkbox label="Online activities" name="type"></el-checkbox>
-                        <el-checkbox label="Promotion activities" name="type"></el-checkbox>
-                        <el-checkbox label="Offline activities" name="type"></el-checkbox>
-                        <el-checkbox label="Simple brand exposure" name="type"></el-checkbox>
-                    </el-checkbox-group>
-                </el-form-item>
-                <el-form-item label="Resources" prop="resource">
-                    <el-radio-group v-model="ruleForm.resource">
-                        <el-radio label="Sponsorship"></el-radio>
-                        <el-radio label="Venue"></el-radio>
-                    </el-radio-group>
-                </el-form-item>
-                <el-form-item label="Activity form" prop="desc">
-                    <el-input type="textarea" v-model="ruleForm.desc"></el-input>
-                </el-form-item>
-                <el-form-item>
-                    <el-button type="primary" @click="submitForm('ruleForm')">Create</el-button>
-                    <el-button @click="resetForm('ruleForm')">Reset</el-button>
-                </el-form-item>
-            </el-form>
-        </div>
-
     </div>
 </template>
 <script>
@@ -125,30 +85,14 @@ export default {
                 "Running Time min": null,
                 Distributor: "Paramount Pictures",
                 Source: "Based on TV",
-                "Major Genre": "Action",
+                "Major Genre": "Drama",
                 "Creative Type": "Dramatization",
                 Director: "Brian De Palma",
                 "Rotten Tomatoes Rating": 81,
                 "IMDB Rating": 8,
-                "IMDB Votes": 86097
-            },
-            movieForm: {
-                Title: "",
-                USGross: 0,
-                WorldwideGross: 0,
-                USDVDSales: null,
-                ProductionBudget: null,
-                ReleaseDate: "",
-                MPAARating: null,
-                RunningTimeMin: null,
-                Distributor: "",
-                Source: "",
-                MajorGenre: "Action",
-                CreativeType: "",
-                Director: "",
-                RottenTomatoesRating: 0,
-                IMDBRating: null,
-                IMDBVotes: 0
+                "IMDB Votes": 86097,
+                "Available": false
+
             },
             ruleForm: {
                 name: '',
@@ -161,27 +105,12 @@ export default {
                 desc: ''
             },
             rules: {
-                name: [
-                    { required: true, message: 'Please input Activity name', trigger: 'blur' },
+                Title: [
+                    { required: true, message: 'Please input Title', trigger: 'blur' },
                     { min: 3, max: 5, message: 'Length should be 3 to 5', trigger: 'blur' }
                 ],
-                region: [
-                    { required: true, message: 'Please select Activity zone', trigger: 'change' }
-                ],
-                date1: [
+                "Release Date": [
                     { type: 'date', required: true, message: 'Please pick a date', trigger: 'change' }
-                ],
-                date2: [
-                    { type: 'date', required: true, message: 'Please pick a time', trigger: 'change' }
-                ],
-                type: [
-                    { type: 'array', required: true, message: 'Please select at least one activity type', trigger: 'change' }
-                ],
-                resource: [
-                    { required: true, message: 'Please select activity resource', trigger: 'change' }
-                ],
-                desc: [
-                    { required: true, message: 'Please input activity form', trigger: 'blur' }
                 ]
             }
         };
@@ -189,9 +118,12 @@ export default {
     methods: {
         ...mapActions(["addMovie", "fetchDistributors"]),
         submitForm(formName) {
+            console.log(formName)
             this.$refs[formName].validate((valid) => {
                 if (valid) {
-                    alert('submit!');
+                    console.log(this.movieData);
+                    this.addMovie(this.movieData);
+                    this.$router.push('/moviesList');
                 } else {
                     console.log('error submit!!');
                     return false;
@@ -199,6 +131,7 @@ export default {
             });
         },
         resetForm(formName) {
+            console.log("Im here" + formName)
             this.$refs[formName].resetFields();
         }
     },

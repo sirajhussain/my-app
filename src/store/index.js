@@ -72,11 +72,11 @@ export default new Vuex.Store({
           console.log(error);
         });
     },
-    deleteMovie({ commit }, movieId) {
+    deleteMovie({ commit }, id) {
       axios
-        .delete(`http://localhost:5000/movies/${movieId}`)
+        .delete(`http://localhost:5000/movies/${id}`)
         .then(() => {
-          commit("DELETE_MOVIE", movieId);
+          commit("DELETE_MOVIE", id);
         })
         .catch((error) => {
           console.log(error);
@@ -97,5 +97,9 @@ export default new Vuex.Store({
     movies: (state) => state.movies,
     loading: (state) => state.loading,
     distributors: (state) => state.distributors,
+    getMovieById: (state) => (id) => {
+      // Getter to retrieve movie details by ID
+      return state.movies.find((movie) => movie.id === id);
+    },
   },
 });
